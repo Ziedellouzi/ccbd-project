@@ -6,17 +6,6 @@ We simulate how datasets evolve over time and implement a system that allows **b
 
 ---
 
-## 🎯 Project Variant
-**Variant 7 — Schema evolution & backward-compatible reads**
-
-We implemented a simple and safe schema evolution scenario:
-- **v1 dataset**: original schema  
-- **v2 dataset**: same schema + one additional column (`device_type`)  
-
-This ensures backward compatibility and avoids complex transformations.
-
----
-
 ##  🧱 Dataset Generation
 
 This script generates two dataset versions:
