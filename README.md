@@ -6,7 +6,11 @@ We simulate how datasets evolve over time and implement a system that allows **b
 
 ---
 
-##  🧱 Dataset Generation
+## 🧭 Project Workflow (Step-by-Step)
+
+This section describes the exact steps required to complete the project.
+
+###  🧱 Dataset Generation (done already)
 
 This script generates two dataset versions:
 
@@ -20,20 +24,6 @@ This design reflects a realistic data pipeline where:
 - new data is written with an updated schema
 
 Both datasets are stored in Parquet format for efficient processing.
-
----
-
-## 🧭 Project Workflow (Step-by-Step)
-
-This section describes the exact steps required to complete the project.
-
-### 1. Dataset Generation
-- Generate a synthetic dataset with the following schema:
-  - `ts`, `user_id`, `region`, `event_type`, `value`
-- Create two versions:
-  - **v1**: original schema
-  - **v2**: same schema + additional column `device_type`
-- Save both datasets in **Parquet format**
 
 ---
 
