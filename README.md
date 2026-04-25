@@ -6,11 +6,8 @@ We simulate how datasets evolve over time and implement a system that allows **b
 
 ---
 
-## 🧭 Project Workflow (Step-by-Step)
 
-This section describes the exact steps required to complete the project.
-
-###  🧱 Dataset Generation (done already)
+## Dataset Generation
 
 This script generates two dataset versions:
 
@@ -24,77 +21,26 @@ This design reflects a realistic data pipeline where:
 - new data is written with an updated schema
 
 Both datasets are stored in Parquet format for efficient processing.
-
 ---
 
-### 2. Data Storage
-- Organize datasets using the following structure:
-curated/<dataset_id>/v1/
-curated/<dataset_id>/v2/
- 
-- Store data locally or upload to cloud storage (Azure Blob / S3 equivalent)
+## 🧱 Dataset Schema
+
+### Version 1 (v1)
+- `ts` (timestamp)  
+- `user_id` (int)  
+- `region` (string)  
+- `event_type` (string)  
+- `value` (float)  
+
+### Version 2 (v2)
+- Same as v1  
+- + `device_type` (string, nullable)  
+
+When reading both versions together, missing values in v1 are handled as `NULL`.
 
 ---
+## 🚀 How to Run
 
-### 3. Schema Contract
-- Define a schema contract file (`schema.json`)
-- Include all expected fields and types
-- Ensure compatibility between v1 and v2
-
----
-
-### 4. Data Reading (Core Task)
-- Implement a reader that supports:
-  - Reading **v1 only**
-  - Reading **v2 only**
-  - Reading **v1 + v2 together**
-- Handle missing columns (e.g., `device_type` in v1 → NULL values)
-- Validate data against the schema contract
-
----
-
-### 5. Query Implementation
-- Implement a fixed analytics query:
-  - Filter by `region` and time range (`ts`)
-  - Group by `event_type`
-  - Compute:
-    - count
-    - average of `value`
-
----
-
-### 6. Benchmarking
-- Run experiments on:
-  - v1 dataset
-  - v2 dataset
-  - combined dataset (v1 + v2)
-- Measure:
-  - Query runtime
-  - Data size
-  - Number of files
-
----
-
-### 7. Analysis
-- Use a Jupyter Notebook (`analysis.ipynb`) to:
-  - Visualize results (plots, tables)
-  - Compare performance
-  - Interpret findings
-
----
-
-### 8. Report
-- Describe:
-  - Methodology
-  - Implementation choices
-  - Results and analysis
-  - Limitations
-
----
-
-### 9. Demo
-- Prepare a short video (2–3 minutes)
-- Demonstrate:
-  - Dataset generation
-  - Query execution
-  - Key results
+### 1. Install dependencies
+```bash
+pip install -r requirements.txt
