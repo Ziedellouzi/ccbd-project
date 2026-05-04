@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 from typing import Dict, List
 
+import numpy as np
 import pyarrow as pa
 import pyarrow.compute as pc
 import pyarrow.dataset as ds
@@ -51,10 +52,10 @@ def load_dataset_as_table(path: Path) -> pa.Table:
 
 def align_table_to_contract(table: pa.Table, fields: List[dict]) -> pa.Table:
     """
-    Align a table with the schema contract.
+    Align dataset schema with the contract.
 
     Missing optional columns are added as null.
-    Required missing columns raise an error.
+    Missing required columns raise an error.
     Existing columns are cast to the expected types.
     """
     columns = []
@@ -129,13 +130,16 @@ def fixed_analytics_query(table: pa.Table, region: str, start_ts: str, end_ts: s
     - group by event_type;
     - compute count and average value.
     """
-    start_scalar = pa.scalar(start_ts, type=pa.timestamp("ns"))
-    end_scalar = pa.scalar(end_ts, type=pa.timestamp("ns"))
+    start_scalar = pa.scalar(np.datetime64(start_ts, "ns"), type=pa.timestamp("ns"))
+    end_scalar = pa.scalar(np.datetime64(end_ts, "ns"), type=pa.timestamp("ns"))
 
-    mask = (
-        pc.equal(table["region"], region)
-        & pc.greater_equal(table["ts"], start_scalar)
-        & pc.less(table["ts"], end_scalar)
+    region_mask = pc.equal(table["region"], region)
+    start_mask = pc.greater_equal(table["ts"], start_scalar)
+    end_mask = pc.less(table["ts"], end_scalar)
+
+    mask = pc.and_kleene(
+        pc.and_kleene(region_mask, start_mask),
+        end_mask
     )
 
     filtered = table.filter(mask)
