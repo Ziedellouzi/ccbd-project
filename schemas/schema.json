@@ -1,0 +1,36 @@
+{
+  "dataset_id": "events",
+  "description": "Unified schema contract for schema evolution variant.",
+  "fields": [
+    {
+      "name": "ts",
+      "type": "timestamp[ns]",
+      "required": true
+    },
+    {
+      "name": "user_id",
+      "type": "int64",
+      "required": true
+    },
+    {
+      "name": "region",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "event_type",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "value",
+      "type": "double",
+      "required": true
+    },
+    {
+      "name": "device_type",
+      "type": "string",
+      "required": false
+    }
+  ]
+}
