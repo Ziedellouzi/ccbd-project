@@ -1,3 +1,7 @@
+Zied Ellouzi, Nassim Maliki
+
+---
+
 # Schema Evolution on S3-Compatible Object Storage
 
 ## Project Overview
