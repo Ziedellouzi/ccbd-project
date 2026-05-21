@@ -1,8 +1,6 @@
 # Schema Evolution on S3-Compatible Object Storage
 
-Cloud Computing & Big Data — University of Neuchâtel
-2025/2026
-Author: Nassim Maliki
+Author: Zied, Ellouzi, Nassim Maliki
 
 ---
 
