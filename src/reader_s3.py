@@ -66,7 +66,7 @@ def load_dataset_as_table(
     version: str
 ) -> pa.Table:
     dataset_path = f"{BUCKET_NAME}/curated/{dataset_id}/{version}"
-
+#Lis ce dossier comme un dataset Parquet stocké dans MinIO.
     dataset = ds.dataset(
         dataset_path,
         format="parquet",
@@ -86,20 +86,20 @@ def align_table_to_contract(
         name = field["name"]
         expected_type = TYPE_MAPPING[field["type"]]
         required = field.get("required", True)
-
+#Si la colonne existe, le reader la garde
         if name in table.column_names:
             column = table[name]
-
+#Si le type n’est pas exactement celui attendu, le reader essaie de convertir exp: int32 → int64
             if column.type != expected_type:
                 column = column.cast(expected_type)
 
             columns.append(column)
             continue
-
+# Si une colonne obligatoire manque, le programme arrête avec une erreur
         if required:
             raise ValueError(f"Missing required column: {name}")
 
-        # Optional columns added in newer schemas become null for older data.
+# Si une colonne optionnelle manque, crée une colonne remplie avec None.
         columns.append(
             pa.array([None] * table.num_rows, type=expected_type)
         )
@@ -109,6 +109,9 @@ def align_table_to_contract(
         schema=expected_arrow_schema(fields)
     )
 
+# validate_table 
+# Elle compare : schema réel de la table
+# avec : schema attendu par schema.json
 
 def validate_table(table: pa.Table, fields: List[dict]) -> None:
     expected_schema = expected_arrow_schema(fields)
@@ -120,6 +123,9 @@ def validate_table(table: pa.Table, fields: List[dict]) -> None:
             f"Actual: {table.schema}"
         )
 
+# 1. charger v1 ou v2
+# 2. aligner avec schema.json
+# 3. valider le schema 
 
 def read_version(
     s3_filesystem,
@@ -134,7 +140,11 @@ def read_version(
 
     return table
 
-
+# 1. Lire v1
+# 2. Corriger son schema
+# 3. Lire v2
+# 4. Corriger son schema
+# 5. Coller v1 + v2 ensemble
 def read_mixed(
     s3_filesystem,
     dataset_id: str,
@@ -148,7 +158,13 @@ def read_mixed(
 
     return mixed_table
 
+# filtre les données avec :
+#                         region = EU
+#                         start_ts = 2026-01-01
+#                       end_ts = 2026-03-01
 
+#Puis elle groupe par :
+#                   event_type
 def fixed_analytics_query(
     table: pa.Table,
     region: str,
